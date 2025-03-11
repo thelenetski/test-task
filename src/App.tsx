@@ -9,7 +9,7 @@ import FinalTeam from "./components/FinalTeam/FinalTeam";
 function App() {
   const type = useSelector(selectTypeModal);
   return (
-    <div className="flex flex-col justify-center items-center w-full h-screen">
+    <div className="flex flex-col justify-center items-center w-full h-screen px-5">
       <FormTeacher />
       <ModalWindow>{type === modalTypes.addTeam && <FinalTeam />}</ModalWindow>
     </div>

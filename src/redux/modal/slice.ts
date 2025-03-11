@@ -1,9 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface ModalState {
-  isOpen: boolean;
-  type: string | null;
-  content: unknown | null;
+  isOpen?: boolean;
+  type?: string | null;
+  content?: unknown | null;
 }
 
 export const modalTypes = {
@@ -20,7 +20,7 @@ const modalSlice = createSlice({
   name: "modal",
   initialState,
   reducers: {
-    openAddTeam(state, action) {
+    openAddTeam(state, action: PayloadAction) {
       state.isOpen = true;
       state.type = modalTypes.addTeam;
       state.content = action.payload;

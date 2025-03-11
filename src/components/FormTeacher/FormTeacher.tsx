@@ -71,23 +71,21 @@ const FormTeacher = () => {
     filter !== null && dispatch(getAbilityPokemons(filter));
   }, [dispatch, filter]);
 
-  const labelPokemons =
-    pokemons?.results?.map((item) => {
-      const { name, url, ...rest } = item;
+  const labelPokemons = (pokemons?.results || pokemons?.pokemon)?.map(
+    (item) => {
+      const pokemon = "pokemon" in item ? item.pokemon : item;
+      const { name, url, ...rest } = pokemon;
       return { label: name, value: url, ...rest };
-    }) ||
-    pokemons?.map((item) => {
-      const { name, url, ...rest } = item.pokemon;
-      return { label: name, value: url, ...rest };
-    });
+    }
+  );
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
-    const pokemonIds = data.pokemons
+    const pokemonIds: number[] = data.pokemons
       .map((pokemon) => {
         const match = pokemon.value.match(/\/(\d+)\/$/);
         return match ? Number(match[1]) : null;
       })
-      .filter(Boolean);
+      .filter((value): value is number => value !== null);
     dispatch(getTeams(pokemonIds));
     dispatch(openAddTeam());
   };

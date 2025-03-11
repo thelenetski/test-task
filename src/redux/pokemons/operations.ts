@@ -6,11 +6,13 @@ export interface Pokemon {
   url: string;
 }
 
+interface PokemonDetails {
+  pokemon: Pokemon;
+}
+
 export interface PokemonResponse {
-  count: number;
-  next: string;
-  previous: string | null;
-  results: Pokemon[];
+  results?: Pokemon[];
+  pokemon?: PokemonDetails[];
 }
 
 export interface PokemonError {
@@ -38,12 +40,12 @@ export const getPokemons = createAsyncThunk<
 
 export const getAbilityPokemons = createAsyncThunk<
   PokemonResponse,
-  void,
+  string,
   { rejectValue: PokemonError }
 >("pokemons/getAbilityPokemons", async (filter, thunkAPI) => {
   try {
     const res = await axios.get<PokemonResponse>(`ability/${filter}`);
-    return res.data?.pokemon;
+    return res.data;
   } catch (error: any) {
     if (error.response) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -53,13 +55,13 @@ export const getAbilityPokemons = createAsyncThunk<
 });
 
 export const getTeams = createAsyncThunk<
-  PokemonResponse,
-  void,
+  string[],
+  number[],
   { rejectValue: PokemonError }
 >("pokemons/getTeams", async (data, thunkAPI) => {
   try {
     const promises = data.map((id) =>
-      axios.get<PokemonResponse>(`pokemon/${id}`)
+      axios.get<Record<string, any>>(`pokemon/${id}`)
     );
 
     const res = await Promise.all(promises);
